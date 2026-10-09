@@ -186,15 +186,15 @@ export default function AdminDashboard() {
       )}
 
       {/* Main Tabs Navigation Bar */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-2 border-b border-[#E4E4E7] dark:border-[#27272A] pb-3 overflow-x-auto no-scrollbar">
         <button
           type="button"
           id="admin-tab-overview"
           onClick={() => setActiveTab('overview')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
             activeTab === 'overview'
-              ? 'bg-slate-900 dark:bg-emerald-600 text-white shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#6366F1] dark:bg-[#818CF8] text-white dark:text-[#09090B] shadow-xs'
+              : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -207,13 +207,13 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('users')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
             activeTab === 'users'
-              ? 'bg-slate-900 dark:bg-emerald-600 text-white shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#6366F1] dark:bg-[#818CF8] text-white dark:text-[#09090B] shadow-xs'
+              : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
           }`}
         >
           <Users className="w-4 h-4" />
           <span>Users</span>
-          <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${activeTab === 'users' ? 'bg-slate-700 dark:bg-emerald-800 text-slate-100' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${activeTab === 'users' ? 'bg-white/20 text-white' : 'bg-[#E4E4E7] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA]'}`}>
             {users.length}
           </span>
         </button>
@@ -224,13 +224,13 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('listings')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
             activeTab === 'listings'
-              ? 'bg-slate-900 dark:bg-emerald-600 text-white shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#6366F1] dark:bg-[#818CF8] text-white dark:text-[#09090B] shadow-xs'
+              : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
           }`}
         >
           <ShoppingBag className="w-4 h-4" />
           <span>Listings</span>
-          <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${activeTab === 'listings' ? 'bg-slate-700 dark:bg-emerald-800 text-slate-100' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${activeTab === 'listings' ? 'bg-white/20 text-white' : 'bg-[#E4E4E7] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA]'}`}>
             {listings.length}
           </span>
         </button>
@@ -241,8 +241,8 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab('reports')}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer shrink-0 ${
             activeTab === 'reports'
-              ? 'bg-slate-900 dark:bg-emerald-600 text-white shadow-xs'
-              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800'
+              ? 'bg-[#6366F1] dark:bg-[#818CF8] text-white dark:text-[#09090B] shadow-xs'
+              : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
           }`}
         >
           <Flag className="w-4 h-4" />
@@ -263,63 +263,63 @@ export default function AdminDashboard() {
           {/* 5 KPI Stat Cards Row */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
             {/* Total Users */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs space-y-1.5">
+              <div className="flex items-center justify-between text-[#71717A] dark:text-[#A1A1AA]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Total Users</span>
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] dark:bg-[#312E81]/40 text-[#4F46E5] dark:text-[#A5B4FC] flex items-center justify-center">
                   <Users className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">--</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Data will appear when the backend is connected.</p>
+              <div className="text-2xl font-bold text-[#18181B] dark:text-[#FAFAFA]">--</div>
+              <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA]">Data will appear when the backend is connected.</p>
             </div>
 
             {/* Total Listings */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs space-y-1.5">
+              <div className="flex items-center justify-between text-[#71717A] dark:text-[#A1A1AA]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Total Listings</span>
-                <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-[#F4F4F5] dark:bg-[#27272A] text-[#18181B] dark:text-[#FAFAFA] flex items-center justify-center">
                   <ShoppingBag className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">--</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Data will appear when the backend is connected.</p>
+              <div className="text-2xl font-bold text-[#18181B] dark:text-[#FAFAFA]">--</div>
+              <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA]">Data will appear when the backend is connected.</p>
             </div>
 
             {/* Active Listings */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs space-y-1.5">
+              <div className="flex items-center justify-between text-[#71717A] dark:text-[#A1A1AA]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Active Listings</span>
-                <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-[#F0FDF4] dark:bg-[#14532D]/40 text-[#16A34A] dark:text-[#22C55E] flex items-center justify-center">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">--</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Data will appear when the backend is connected.</p>
+              <div className="text-2xl font-bold text-[#16A34A] dark:text-[#22C55E]">--</div>
+              <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA]">Data will appear when the backend is connected.</p>
             </div>
 
             {/* Sold Listings */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs space-y-1.5">
+              <div className="flex items-center justify-between text-[#71717A] dark:text-[#A1A1AA]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Sold Listings</span>
-                <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-400 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-[#EEF2FF] dark:bg-[#312E81]/40 text-[#4F46E5] dark:text-[#A5B4FC] flex items-center justify-center">
                   <IndianRupee className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-bold text-indigo-900 dark:text-indigo-300">--</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Data will appear when the backend is connected.</p>
+              <div className="text-2xl font-bold text-[#18181B] dark:text-[#FAFAFA]">--</div>
+              <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA]">Data will appear when the backend is connected.</p>
             </div>
 
             {/* Pending Reports */}
-            <div className="col-span-2 sm:col-span-1 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xs space-y-1.5">
-              <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+            <div className="col-span-2 sm:col-span-1 p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs space-y-1.5">
+              <div className="flex items-center justify-between text-[#71717A] dark:text-[#A1A1AA]">
                 <span className="text-[11px] font-bold uppercase tracking-wider">Pending Reports</span>
                 <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
                   <AlertTriangle className="w-4 h-4" />
                 </div>
               </div>
               <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">--</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">Data will appear when the backend is connected.</p>
+              <p className="text-[11px] text-[#71717A] dark:text-[#A1A1AA]">Data will appear when the backend is connected.</p>
             </div>
           </div>
 

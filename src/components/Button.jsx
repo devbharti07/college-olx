@@ -25,13 +25,13 @@ export default function Button({
   const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-150 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 active:scale-[0.99] select-none';
 
   const variantStyles = {
-    primary: 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs focus-visible:ring-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-500',
-    secondary: 'bg-slate-900 hover:bg-slate-800 text-white shadow-xs focus-visible:ring-slate-900 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900',
-    outline: 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-400 dark:hover:border-slate-600 focus-visible:ring-slate-400 shadow-2xs',
-    ghost: 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:ring-slate-400',
-    danger: 'bg-rose-600 hover:bg-rose-700 text-white shadow-xs focus-visible:ring-rose-500 dark:bg-rose-600 dark:hover:bg-rose-500',
-    success: 'bg-teal-600 hover:bg-teal-700 text-white shadow-xs focus-visible:ring-teal-500 dark:bg-teal-600 dark:hover:bg-teal-500',
-    subtle: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-200/60 dark:border-emerald-800/60 focus-visible:ring-emerald-600',
+    primary: 'bg-[#6366F1] hover:bg-[#4F46E5] text-white shadow-xs focus-visible:ring-[#6366F1] dark:bg-[#818CF8] dark:hover:bg-[#A5B4FC] dark:text-[#09090B]',
+    secondary: 'bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] text-[#18181B] dark:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A] shadow-2xs focus-visible:ring-[#6366F1]',
+    outline: 'border border-[#E4E4E7] dark:border-[#27272A] bg-white dark:bg-[#18181B] text-[#18181B] dark:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A] hover:border-[#D4D4D8] dark:hover:border-[#3F3F46] focus-visible:ring-[#6366F1] shadow-2xs',
+    ghost: 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A] focus-visible:ring-[#6366F1]',
+    danger: 'bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-xs focus-visible:ring-[#DC2626] dark:bg-[#F87171] dark:hover:bg-[#EF4444] dark:text-[#09090B]',
+    success: 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-xs focus-visible:ring-[#16A34A] dark:bg-[#22C55E] dark:hover:bg-[#16A34A] dark:text-[#09090B]',
+    subtle: 'bg-[#EEF2FF] dark:bg-[#312E81]/30 text-[#4338CA] dark:text-[#C7D2FE] hover:bg-[#E0E7FF] dark:hover:bg-[#312E81]/50 border border-[#C7D2FE]/60 dark:border-[#4338CA]/60 focus-visible:ring-[#6366F1]',
   };
 
   const sizeStyles = {

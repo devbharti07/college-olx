@@ -13,48 +13,45 @@
    ========================================================================== */
 
 :root {
-  /* Brand Primary Colors (Trustworthy Campus Emerald / Slate) */
-  --color-brand-50: #f0fdf4;
-  --color-brand-100: #dcfce7;
-  --color-brand-200: #bbf7d0;
-  --color-brand-500: #10b981;
-  --color-brand-600: #059669;
-  --color-brand-700: #047857;
-  --color-brand-800: #065f46;
-  --color-brand-900: #064e3b;
+  /* Centralized Color Tokens - Light Mode */
+  --background: #FAFAFA;
+  --surface: #FFFFFF;
+  --text-primary: #18181B;
+  --text-secondary: #71717A;
+  --border: #E4E4E7;
+  --accent: #6366F1;
+  --accent-hover: #4F46E5;
+  --success: #16A34A;
+  --error: #DC2626;
 
-  /* Neutral Surface & Text Scale (Light) */
-  --color-surface-bg: #f8fafc;
-  --color-surface-card: #ffffff;
-  --color-surface-subtle: #f1f5f9;
-  --color-surface-muted: #e2e8f0;
-  --color-border: #e2e8f0;
-  --color-border-subtle: #f1f5f9;
+  /* Semantic Aliases */
+  --color-surface-bg: var(--background);
+  --color-surface-card: var(--surface);
+  --color-surface-subtle: #F4F4F5;
+  --color-surface-muted: var(--border);
+  --color-border: var(--border);
+  --color-border-subtle: #F4F4F5;
   
-  --color-text-main: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
-  --color-text-subtle: #94a3b8;
+  --color-text-main: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: #A1A1AA;
+  --color-text-subtle: #D4D4D8;
 
-  /* Semantic Status Colors */
-  --color-success-bg: #f0fdf4;
-  --color-success-text: #166534;
-  --color-success-border: #bbf7d0;
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
 
-  --color-warning-bg: #fffbeb;
-  --color-warning-text: #92400e;
-  --color-warning-border: #fde68a;
+  /* Status Colors */
+  --color-success-bg: rgba(22, 163, 74, 0.08);
+  --color-success-text: var(--success);
+  --color-success-border: rgba(22, 163, 74, 0.25);
 
-  --color-danger-bg: #fef2f2;
-  --color-danger-text: #991b1b;
-  --color-danger-border: #fecaca;
-
-  --color-info-bg: #eff6ff;
-  --color-info-text: #1e40af;
-  --color-info-border: #bfdbfe;
+  --color-danger-bg: rgba(220, 38, 38, 0.08);
+  --color-danger-text: var(--error);
+  --color-danger-border: rgba(220, 38, 38, 0.25);
 
   /* Typography */
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
 
   /* Border Radii */
   --radius-xs: 4px;
@@ -65,41 +62,47 @@
   --radius-full: 9999px;
 
   /* Shadows (Subtle, crisp, layered) */
-  --shadow-subtle-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-subtle-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
-  --shadow-subtle-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-  --shadow-subtle-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --shadow-subtle-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-subtle-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --shadow-subtle-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-subtle-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
 }
 
 html.dark {
-  /* Neutral Surface & Text Scale (Dark) */
-  --color-surface-bg: #0b0f19;
-  --color-surface-card: #151e2e;
-  --color-surface-subtle: #1e293b;
-  --color-surface-muted: #334155;
-  --color-border: #223049;
-  --color-border-subtle: #1e293b;
+  /* Centralized Color Tokens - Dark Mode */
+  --background: #09090B;
+  --surface: #18181B;
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --border: #27272A;
+  --accent: #818CF8;
+  --accent-hover: #A5B4FC;
+  --success: #22C55E;
+  --error: #F87171;
+
+  /* Semantic Aliases */
+  --color-surface-bg: var(--background);
+  --color-surface-card: var(--surface);
+  --color-surface-subtle: #27272A;
+  --color-surface-muted: #3F3F46;
+  --color-border: var(--border);
+  --color-border-subtle: #27272A;
   
-  --color-text-main: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-text-subtle: #64748b;
+  --color-text-main: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: #71717A;
+  --color-text-subtle: #52525B;
 
-  --color-success-bg: rgba(6, 78, 59, 0.3);
-  --color-success-text: #6ee7b7;
-  --color-success-border: #065f46;
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
 
-  --color-warning-bg: rgba(120, 53, 15, 0.3);
-  --color-warning-text: #fcd34d;
-  --color-warning-border: #92400e;
+  --color-success-bg: rgba(34, 197, 94, 0.12);
+  --color-success-text: var(--success);
+  --color-success-border: rgba(34, 197, 94, 0.28);
 
-  --color-danger-bg: rgba(153, 27, 27, 0.3);
-  --color-danger-text: #fca5a5;
-  --color-danger-border: #991b1b;
-
-  --color-info-bg: rgba(30, 64, 175, 0.3);
-  --color-info-text: #93c5fd;
-  --color-info-border: #1e40af;
+  --color-danger-bg: rgba(248, 113, 113, 0.12);
+  --color-danger-text: var(--error);
+  --color-danger-border: rgba(248, 113, 113, 0.28);
 }
 
 @layer base {
@@ -144,7 +147,7 @@ html.dark {
   background-color: var(--color-surface-card);
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -152,31 +155,31 @@ html.dark {
   background-color: var(--color-surface-card);
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease-in-out;
 }
 
 .campus-card-interactive:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  border-color: #D4D4D8;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-1px);
 }
 
 html.dark .campus-card {
-  background-color: #151e2e;
-  border-color: #223049;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  background-color: var(--color-surface-card);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 html.dark .campus-card-interactive {
-  background-color: #151e2e;
-  border-color: #223049;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  background-color: var(--color-surface-card);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 html.dark .campus-card-interactive:hover {
-  border-color: #334155;
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+  border-color: #3F3F46;
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.35);
 }
 
 /* Section Header Typography */
@@ -222,10 +225,178 @@ html.dark .campus-card-interactive:hover {
 
 /* Subtle, purposeful interactive states */
 .campus-interactive-lift {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .campus-interactive-lift:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* Notion-inspired clean utilitarian callout & cards */
+.notion-callout {
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  transition: border-color 0.15s ease;
+}
+
+.notion-callout:hover {
+  border-color: #D4D4D8;
+}
+
+html.dark .notion-callout:hover {
+  border-color: #3F3F46;
+}
+
+/* Motion Graphics, Keyframe Animations & Staggered Transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulseGently {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(0.988);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger animation delay utilities */
+.delay-75 {
+  animation-delay: 75ms;
+}
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-150 {
+  animation-delay: 150ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Stagger children utilities */
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
+.stagger-7 { animation-delay: 350ms; }
+.stagger-8 { animation-delay: 400ms; }
+
+/* Skeleton Shimmer Effect */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #F4F4F5 0%,
+    #E4E4E7 50%,
+    #F4F4F5 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite ease-in-out;
+}
+
+html.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #27272A 0%,
+    #3F3F46 50%,
+    #27272A 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite ease-in-out;
+}
+
+/* Page Transition Wrapper */
+.page-transition-enter {
+  animation: fadeIn 0.25s ease-out both;
+}
+
+/* Motion system & accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

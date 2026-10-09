@@ -1,2 +1,2 @@
 export * from './categories';
-export * from './mockListings';
+// Note: DEV_LISTINGS in devFixtures.js are DEVELOPMENT ONLY and not exported to production.

@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==============================================================================
+// ENUMS
+// ==============================================================================
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum Category {
+  BOOKS
+  ELECTRONICS
+  LAB_EQUIPMENT
+  CYCLES
+  NOTES
+  CLOTHING
+  HOSTEL_ITEMS
+  OTHER
+}
+
+enum Condition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  REMOVED
+}
+
+enum ReportReason {
+  SPAM
+  SCAM
+  INAPPROPRIATE
+  MISLEADING
+  DUPLICATE
+  PROHIBITED_ITEM
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  REJECTED
+}
+
+// ==============================================================================
+// MODELS
+// ==============================================================================
+
+model User {
+  id                      String        @id @default(uuid()) @db.Uuid
+  keycloakUserId          String        @unique @db.VarChar(255)
+  name                    String        @db.VarChar(100)
+  email                   String        @unique @db.VarChar(255)
+  collegeEmail            String?       @unique @db.VarChar(255)
+  collegeId               String        @default("") @db.VarChar(100)
+  avatar                  String?       @db.Text
+  college                 String        @default("Campus") @db.VarChar(150)
+  department              String        @default("") @db.VarChar(100)
+  pickupSpot              String        @default("Campus Library / Student Center") @db.VarChar(150)
+  role                    Role          @default(STUDENT)
+  isVerified              Boolean       @default(false)
+  verificationToken       String?       @db.VarChar(255)
+  verificationTokenExpiry DateTime?
+  accountStatus           AccountStatus @default(ACTIVE)
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  // Relationships
+  listingsCreated         Listing[]                 @relation("SellerListings")
+  listingsPurchased       Listing[]                 @relation("SoldListings")
+  conversations           ConversationParticipant[]
+  messagesSent            Message[]                 @relation("SentMessages")
+  messageReads            MessageRead[]
+  reportsCreated          Report[]                  @relation("ReportsCreated")
+  reportsAgainst          Report[]                  @relation("ReportsAgainst")
+
+  @@index([keycloakUserId])
+  @@index([email])
+  @@index([collegeEmail])
+  @@index([accountStatus])
+  @@map("users")
+}
+
+model Listing {
+  id          String        @id @default(uuid()) @db.Uuid
+  sellerId    String        @db.Uuid
+  seller      User          @relation("SellerListings", fields: [sellerId], references: [id], onDelete: Cascade)
+  title       String        @db.VarChar(100)
+  description String        @db.VarChar(2000)
+  price       Float
+  category    Category
+  condition   Condition     @default(GOOD)
+  location    String        @default("Campus Meetup") @db.VarChar(120)
+  status      ListingStatus @default(ACTIVE)
+  soldToId    String?       @db.Uuid
+  soldTo      User?         @relation("SoldListings", fields: [soldToId], references: [id], onDelete: SetNull)
+  viewsCount  Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relationships
+  images        ListingImage[]
+  conversations Conversation[]
+  reports       Report[]
+
+  @@index([sellerId])
+  @@index([status])
+  @@index([category])
+  @@index([condition])
+  @@index([price])
+  @@index([createdAt])
+  @@index([status, category, price, createdAt])
+  @@index([status, sellerId])
+  @@map("listings")
+}
+
+model ListingImage {
+  id        String   @id @default(uuid()) @db.Uuid
+  listingId String   @db.Uuid
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String   @db.Text
+  publicId  String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+
+  @@index([listingId])
+  @@map("listing_images")
+}
+
+model Conversation {
+  id            String                    @id @default(uuid()) @db.Uuid
+  listingId     String?                   @db.Uuid
+  listing       Listing?                  @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  lastMessageId String?                   @unique @db.Uuid
+  lastMessage   Message?                  @relation("ConversationLastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
+
+  participants  ConversationParticipant[]
+  messages      Message[]                 @relation("ConversationMessages")
+
+  @@index([listingId])
+  @@index([updatedAt])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String       @db.Uuid
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  conversation   Conversation @relation("ConversationMessages", fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String       @db.Uuid
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  text           String       @db.VarChar(1000)
+  createdAt      DateTime     @default(now())
+
+  readBy                  MessageRead[]
+  lastMessageConversation Conversation? @relation("ConversationLastMessage")
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model MessageRead {
+  id        String   @id @default(uuid()) @db.Uuid
+  messageId String   @db.Uuid
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  readAt    DateTime @default(now())
+
+  @@unique([messageId, userId])
+  @@index([userId])
+  @@index([messageId])
+  @@map("message_reads")
+}
+
+model Report {
+  id             String       @id @default(uuid()) @db.Uuid
+  reporterId     String       @db.Uuid
+  reporter       User         @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
+  listingId      String?      @db.Uuid
+  listing        Listing?     @relation(fields: [listingId], references: [id], onDelete: SetNull)
+  reportedUserId String?      @db.Uuid
+  reportedUser   User?        @relation("ReportsAgainst", fields: [reportedUserId], references: [id], onDelete: SetNull)
+  reason         ReportReason
+  description    String       @default("") @db.VarChar(1000)
+  status         ReportStatus @default(PENDING)
+  moderatorNotes String       @default("") @db.VarChar(2000)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([reporterId, createdAt])
+  @@index([status, createdAt])
+  @@index([listingId])
+  @@index([reportedUserId])
+  @@map("reports")
+}

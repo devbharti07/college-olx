@@ -17,25 +17,25 @@ export default function Badge({
   const baseStyles = `inline-flex items-center font-medium transition-colors select-none ${pill ? 'rounded-full' : 'rounded-md'}`;
 
   const variantStyles = {
-    default: 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
-    primary: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800/80',
-    success: 'bg-teal-50 text-teal-800 border border-teal-200/80 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-800/80',
-    warning: 'bg-amber-50 text-amber-900 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800/80',
-    danger: 'bg-rose-50 text-rose-900 border border-rose-200/80 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800/80',
-    info: 'bg-sky-50 text-sky-800 border border-sky-200/80 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-800/80',
-    secondary: 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900',
-    outline: 'border border-slate-300 text-slate-600 bg-white dark:border-slate-700 dark:text-slate-300 dark:bg-slate-900',
+    default: 'bg-[#F4F4F5] text-[#71717A] border border-[#E4E4E7] dark:bg-[#27272A] dark:text-[#A1A1AA] dark:border-[#27272A]',
+    primary: 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE] dark:bg-[#312E81]/30 dark:text-[#A5B4FC] dark:border-[#4338CA]/40',
+    success: 'bg-[#F0FDF4] text-[#16A34A] border border-[#BBF7D0] dark:bg-[#14532D]/30 dark:text-[#22C55E] dark:border-[#16A34A]/40',
+    warning: 'bg-[#FFFBEB] text-[#B45309] border border-[#FDE68A] dark:bg-[#78350F]/30 dark:text-[#FBBF24] dark:border-[#B45309]/40',
+    danger: 'bg-[#FEF2F2] text-[#DC2626] border border-[#FECACA] dark:bg-[#7F1D1D]/30 dark:text-[#F87171] dark:border-[#DC2626]/40',
+    info: 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE] dark:bg-[#312E81]/30 dark:text-[#A5B4FC] dark:border-[#4338CA]/40',
+    secondary: 'bg-[#18181B] text-[#FAFAFA] dark:bg-[#FAFAFA] dark:text-[#18181B]',
+    outline: 'border border-[#E4E4E7] text-[#71717A] bg-white dark:border-[#27272A] dark:text-[#A1A1AA] dark:bg-[#18181B]',
   };
 
   const dotColors = {
-    default: 'bg-slate-400',
-    primary: 'bg-emerald-600',
-    success: 'bg-teal-600',
-    warning: 'bg-amber-600',
-    danger: 'bg-rose-600',
-    info: 'bg-sky-600',
-    secondary: 'bg-white',
-    outline: 'bg-slate-500',
+    default: 'bg-[#71717A]',
+    primary: 'bg-[#6366F1] dark:bg-[#818CF8]',
+    success: 'bg-[#16A34A] dark:bg-[#22C55E]',
+    warning: 'bg-[#B45309] dark:bg-[#FBBF24]',
+    danger: 'bg-[#DC2626] dark:bg-[#F87171]',
+    info: 'bg-[#6366F1] dark:bg-[#818CF8]',
+    secondary: 'bg-white dark:bg-[#18181B]',
+    outline: 'bg-[#71717A]',
   };
 
   const sizeStyles = {

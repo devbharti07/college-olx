@@ -14,3 +14,7 @@ export { default as About } from './About';
 export { default as Contact } from './Contact';
 export { default as Privacy } from './Privacy';
 export { default as Terms } from './Terms';
+export { default as VerifyEmail } from './VerifyEmail';
+export { default as Report } from './Report';
+export { default as Landing } from './Landing';
+export { default as Hero } from './Hero';

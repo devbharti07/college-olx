@@ -1,66 +1,91 @@
 /**
  * ============================================================================
- * Authentication Service (Future API Service Layer)
+ * Authentication Service (Keycloak Identity + Backend API Layer)
  * ============================================================================
- * Defines methods for login, registration, password recovery, and session check.
- * Pure frontend stub ready for JWT / session backend integration.
- * Does NOT perform fake token storage or mock authentication.
+ * Coordinates with Keycloak Identity Provider for authentication (login,
+ * registration, logout) and backend endpoints under /api/auth for application
+ * profile rehydration (/me) and institutional college email verification.
  * ============================================================================
  */
 
+import apiClient from './apiClient.js';
+import { login as keycloakLogin, register as keycloakRegister, logout as keycloakLogout, getValidToken } from '../auth/keycloak.js';
+
 export const authService = {
   /**
-   * Submit student credentials for authentication.
-   * @param {Object} credentials - { email, password, rememberMe }
-   * @returns {Promise<{ success: boolean, message: string }>}
+   * Redirect to Keycloak authentication flow.
+   * @param {Object} options - { redirectUri, idpHint, etc. }
    */
-  login: async (credentials) => {
-    // Pure frontend simulation stub: ready for POST /api/auth/login
-    if (!credentials?.email || !credentials?.password) {
-      return { success: false, message: 'Email and password are required.' };
+  login: async (options = {}) => {
+    return keycloakLogin(options);
+  },
+
+  /**
+   * Redirect to Keycloak registration flow.
+   * @param {Object} options - { redirectUri }
+   */
+  register: async (options = {}) => {
+    return keycloakRegister(options);
+  },
+
+  /**
+   * Rehydrate current authenticated user session from backend.
+   * GET /api/auth/me
+   * @returns {Promise<{ user: Object }>}
+   */
+  getMe: async () => {
+    return apiClient.get('/auth/me');
+  },
+
+  /**
+   * Log out of Keycloak session and notify backend.
+   * POST /api/auth/logout + Keycloak logout
+   */
+  logout: async (options = {}) => {
+    try {
+      await apiClient.post('/auth/logout', {}).catch(() => {});
+    } finally {
+      await keycloakLogout(options);
     }
-    return {
-      success: true,
-      message: 'Authentication client validated. Connect backend API to establish persistent session.',
-    };
+    return { success: true };
   },
 
   /**
-   * Submit student details for account registration.
-   * @param {Object} registrationData - { fullName, email, collegeId, password }
-   * @returns {Promise<{ success: boolean, message: string }>}
+   * Submit institutional college email for verification.
+   * POST /api/auth/college-email
+   * @param {string} collegeEmail
    */
-  register: async (registrationData) => {
-    // Pure frontend simulation stub: ready for POST /api/auth/register
-    if (!registrationData?.email || !registrationData?.collegeId) {
-      return { success: false, message: 'Registration data incomplete.' };
-    }
-    return {
-      success: true,
-      message: 'Registration client validated. Connect backend API to store student profile.',
-    };
+  submitCollegeEmail: async (collegeEmail) => {
+    return apiClient.post('/auth/college-email', { collegeEmail });
   },
 
   /**
-   * Request password reset instructions.
-   * @param {string} email
-   * @returns {Promise<{ success: boolean, message: string }>}
+   * Verify college email with cryptographic token.
+   * POST /api/auth/verify-email
+   * @param {string} token
    */
-  requestPasswordReset: async (email) => {
-    return {
-      success: true,
-      message: `Password reset link dispatched to ${email}.`,
-    };
+  verifyEmail: async (token) => {
+    return apiClient.post('/auth/verify-email', { token });
   },
 
   /**
-   * Check if a valid session exists.
-   * @returns {boolean}
+   * Resend institutional verification email to registered college address.
+   * POST /api/auth/resend-verification
    */
-  isAuthenticated: () => {
-    // Frontend-only: returns false until real auth backend is connected
-    return false;
+  resendVerification: async () => {
+    return apiClient.post('/auth/resend-verification', {});
   },
+
+  /**
+   * Check if user is currently authenticated with a valid token.
+   * @returns {Promise<boolean>}
+   */
+  isAuthenticated: async () => {
+    const token = await getValidToken();
+    return Boolean(token);
+  },
+
+  getToken: getValidToken,
 };
 
 export default authService;

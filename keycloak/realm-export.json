@@ -1,0 +1,78 @@
+{
+  "realm": "campus-classifieds",
+  "displayName": "Campus Classifieds",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>Campus</span> Classifieds</div>",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "rememberMe": true,
+  "verifyEmail": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "smtpServer": {
+    "host": "${KC_SMTP_HOST:mailpit}",
+    "port": "${KC_SMTP_PORT:1025}",
+    "from": "${KC_SMTP_FROM:noreply@campus-classifieds.local}",
+    "fromDisplayName": "${KC_SMTP_FROM_DISPLAY:Campus Classifieds}",
+    "replyTo": "",
+    "replyToDisplayName": "",
+    "envelopeFrom": "",
+    "auth": "${KC_SMTP_AUTH:false}",
+    "user": "${KC_SMTP_USER:}",
+    "password": "${KC_SMTP_PASSWORD:}",
+    "ssl": "${KC_SMTP_SSL:false}",
+    "starttls": "${KC_SMTP_STARTTLS:false}"
+  },
+  "roles": {
+    "realm": [
+      {
+        "name": "student",
+        "description": "Verified or registered student user with marketplace buyer/seller capabilities",
+        "composite": false,
+        "clientRole": false
+      },
+      {
+        "name": "admin",
+        "description": "Campus administrator with moderation, user management, and report resolution privileges",
+        "composite": false,
+        "clientRole": false
+      }
+    ],
+    "client": {}
+  },
+  "defaultRoles": [
+    "student"
+  ],
+  "clients": [
+    {
+      "clientId": "campus-classifieds-web",
+      "name": "Campus Classifieds Web Client",
+      "description": "Public Single-Page Application client (Vite + React)",
+      "enabled": true,
+      "alwaysDisplayInConsole": true,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:5173/*",
+        "http://localhost:5173"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*##http://localhost:5173"
+      },
+      "fullScopeAllowed": true
+    }
+  ]
+}

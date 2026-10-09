@@ -26,18 +26,18 @@ export default function EmptyState({
   const secondaryText = secondaryActionText || secondaryActionLabel;
   return (
     <div
-      className={`p-8 sm:p-12 text-center rounded-xl bg-white dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-800 shadow-2xs flex flex-col items-center justify-center space-y-3.5 max-w-lg mx-auto ${className}`.trim()}
+      className={`p-8 sm:p-12 text-center rounded-xl bg-white dark:bg-[#18181B] border border-dashed border-[#E4E4E7] dark:border-[#27272A] shadow-2xs flex flex-col items-center justify-center space-y-3.5 max-w-lg mx-auto animate-fade-in ${className}`.trim()}
     >
-      <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center">
+      <div className="w-12 h-12 rounded-xl bg-[#F4F4F5] dark:bg-[#27272A] text-[#71717A] dark:text-[#A1A1AA] flex items-center justify-center">
         <Icon className="w-6 h-6" aria-hidden="true" />
       </div>
 
       <div className="space-y-1 max-w-sm">
-        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+        <h3 className="text-base font-bold text-[#18181B] dark:text-[#FAFAFA] tracking-tight">
           {title}
         </h3>
         {description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+          <p className="text-xs text-[#71717A] dark:text-[#A1A1AA] leading-relaxed">
             {description}
           </p>
         )}

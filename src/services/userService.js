@@ -1,71 +1,50 @@
 /**
  * ============================================================================
- * User Service (Frontend API Service Layer)
+ * User Service (Real Backend API Layer)
  * ============================================================================
- * Defines methods for student profile retrieval, profile update, and user listings.
- * Pure frontend stub ready for backend user API integration.
- * No filler user profile or fake statistics are returned in production UI.
+ * Communicates with backend endpoints under /api/users.
+ * Handles current student profile retrieval, profile updates, and public seller
+ * profile lookups.
  * ============================================================================
  */
 
-const PROFILE_STORAGE_KEY = 'campus_classifieds_profile';
-const LISTINGS_STORAGE_KEY = 'campus_classifieds_listings';
-
-function getStoredProfile() {
-  try {
-    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {
-    console.warn('Failed to parse local profile:', e);
-  }
-  return null;
-}
-
-function getStoredListings() {
-  try {
-    const raw = localStorage.getItem(LISTINGS_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.warn('Failed to parse local listings:', e);
-  }
-  return [];
-}
+import apiClient from './apiClient.js';
 
 export const userService = {
   /**
-   * Get student profile.
-   * Returns saved session profile if any, otherwise null (clean empty state).
+   * Get current authenticated student profile.
+   * GET /api/users/me
+   * @returns {Promise<Object>}
    */
   getProfile: async () => {
-    return getStoredProfile();
+    const data = await apiClient.get('/users/me');
+    return data?.user || data;
   },
 
   /**
-   * Update student profile in local storage.
+   * Update student profile fields.
+   * PATCH /api/users/me
+   * @param {Object} updates - Allowed editable fields: name, avatar, department, pickupSpot, college
+   * @returns {Promise<{ user: Object }>}
    */
   updateProfile: async (updates) => {
-    const current = getStoredProfile() || {};
-    const updated = { ...current, ...updates };
-    try {
-      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updated));
-    } catch (e) {
-      console.warn('Failed to save profile to localStorage:', e);
-    }
+    const data = await apiClient.patch('/users/me', updates);
     return {
       success: true,
-      data: updated,
-      message: 'Profile updated in this session.',
+      data: data?.user || data,
+      message: 'Profile updated successfully.',
     };
   },
 
   /**
-   * Get user's own listings from the shared frontend listings store.
+   * Get public sanitized seller profile by user ID.
+   * GET /api/users/:id
+   * @param {string} id - User UUID
+   * @returns {Promise<Object>}
    */
-  getMyListings: async () => {
-    return getStoredListings();
+  getPublicProfile: async (id) => {
+    const data = await apiClient.get(`/users/${id}`);
+    return data?.user || data;
   },
 };
 

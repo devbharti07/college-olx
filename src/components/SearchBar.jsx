@@ -68,14 +68,14 @@ export default function SearchBar({
           disabled={disabled}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className={`w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs transition-all duration-150 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:cursor-not-allowed ${sizeClasses[size] || sizeClasses.md}`}
+          className={`w-full bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] rounded-xl text-[#18181B] dark:text-[#FAFAFA] placeholder:text-[#71717A] dark:placeholder:text-[#A1A1AA] shadow-2xs transition-all duration-150 focus:outline-none focus:border-[#6366F1] dark:focus:border-[#818CF8] focus:ring-1 focus:ring-[#6366F1] dark:focus:ring-[#818CF8] disabled:bg-[#FAFAFA] dark:disabled:bg-[#18181B] disabled:cursor-not-allowed ${sizeClasses[size] || sizeClasses.md}`}
         />
 
         {value && !disabled && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-0.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#18181B] dark:hover:text-[#FAFAFA] p-0.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1]"
             aria-label="Clear search query"
           >
             <X className="w-4 h-4" />

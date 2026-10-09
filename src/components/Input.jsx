@@ -32,11 +32,11 @@ const Input = forwardRef(function Input(
 
   const isTextarea = type === 'textarea';
 
-  const baseFieldStyles = 'w-full rounded-xl bg-white dark:bg-slate-800 border text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-2xs transition-colors duration-150 focus:outline-none disabled:bg-slate-50 dark:disabled:bg-slate-900 disabled:text-slate-400 disabled:border-slate-200 dark:disabled:border-slate-800 disabled:cursor-not-allowed';
+  const baseFieldStyles = 'w-full rounded-xl bg-white dark:bg-[#18181B] border text-sm text-[#18181B] dark:text-[#FAFAFA] placeholder:text-[#71717A] dark:placeholder:text-[#A1A1AA] shadow-2xs transition-colors duration-150 focus:outline-none disabled:bg-[#FAFAFA] dark:disabled:bg-[#18181B] disabled:text-[#A1A1AA] disabled:border-[#E4E4E7] dark:disabled:border-[#27272A] disabled:cursor-not-allowed';
 
   const stateStyles = error
-    ? 'border-rose-300 dark:border-rose-500/60 focus:border-rose-600 focus:ring-1 focus:ring-rose-600 text-rose-900 dark:text-rose-200'
-    : 'border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600';
+    ? 'border-[#DC2626] dark:border-[#F87171] focus:border-[#DC2626] focus:ring-1 focus:ring-[#DC2626] text-[#DC2626] dark:text-[#F87171]'
+    : 'border-[#E4E4E7] dark:border-[#27272A] hover:border-[#D4D4D8] dark:hover:border-[#3F3F46] focus:border-[#6366F1] dark:focus:border-[#818CF8] focus:ring-1 focus:ring-[#6366F1] dark:focus:ring-[#818CF8]';
 
   const paddingStyles = isTextarea
     ? 'p-3'
@@ -104,7 +104,7 @@ const Input = forwardRef(function Input(
       </div>
 
       {error ? (
-        <p id={errorId} className="text-xs text-rose-600 font-medium flex items-center gap-1">
+        <p id={errorId} className="text-xs text-[#DC2626] dark:text-[#F87171] font-medium flex items-center gap-1">
           <span>{error}</span>
         </p>
       ) : helperText ? (

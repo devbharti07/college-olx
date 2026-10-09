@@ -25,14 +25,14 @@ export default function Contact() {
         }
       />
 
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-2xs space-y-6">
+      <div className="bg-white dark:bg-[#18181B] rounded-2xl border border-[#E4E4E7] dark:border-[#27272A] p-6 sm:p-8 shadow-2xs space-y-6">
         {submitted ? (
           <div className="p-8 text-center space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-[#F0FDF4] dark:bg-[#14532D]/40 text-[#16A34A] dark:text-[#22C55E] flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Message Received</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+            <h2 className="text-lg font-bold text-[#18181B] dark:text-[#FAFAFA]">Message Received</h2>
+            <p className="text-xs text-[#71717A] dark:text-[#A1A1AA] max-w-sm mx-auto">
               Thank you for reaching out! Our campus student representative will reply to your university email within 24 hours.
             </p>
             <Button variant="outline" size="sm" onClick={() => setSubmitted(false)}>
@@ -86,13 +86,13 @@ export default function Contact() {
           </form>
         )}
 
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2">
+        <div className="pt-4 border-t border-[#E4E4E7] dark:border-[#27272A] flex flex-col sm:flex-row items-center justify-between text-xs text-[#71717A] dark:text-[#A1A1AA] gap-2">
           <span className="flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+            <Mail className="w-3.5 h-3.5 text-[#71717A] dark:text-[#A1A1AA]" />
             <span>support@campusclassifieds.edu</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+            <MapPin className="w-3.5 h-3.5 text-[#71717A] dark:text-[#A1A1AA]" />
             <span>Student Center Room 204</span>
           </span>
         </div>

@@ -31,7 +31,10 @@ export default function ListingCard({
     images = [],
   } = listing;
 
-  const primaryImage = images && images.length > 0 ? images[0] : null;
+  const listingId = id || listing._id;
+  const rawPrimary = images && images.length > 0 ? images[0] : null;
+  const primaryImage =
+    typeof rawPrimary === 'object' && rawPrimary !== null ? rawPrimary.url : rawPrimary;
 
   const conditionVariant = {
     'New': 'success',
@@ -43,12 +46,12 @@ export default function ListingCard({
 
   return (
     <article
-      className={`group relative bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-150 flex flex-col overflow-hidden ${className}`.trim()}
+      className={`group relative bg-white dark:bg-[#18181B] rounded-xl border border-[#E4E4E7] dark:border-[#27272A] shadow-2xs hover:border-[#6366F1]/50 dark:hover:border-[#818CF8]/50 hover:shadow-md hover:-translate-y-1 transition-all duration-200 ease-out flex flex-col overflow-hidden ${className}`.trim()}
     >
       {/* Image Container with clickable link */}
       <Link
-        to={`/listings/${id}`}
-        className="relative aspect-4/3 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden block focus:outline-none"
+        to={`/listings/${listingId}`}
+        className="relative aspect-4/3 w-full bg-[#F4F4F5] dark:bg-[#27272A] overflow-hidden block focus:outline-none"
       >
         {primaryImage && !imageError ? (
           <img
@@ -56,12 +59,12 @@ export default function ListingCard({
             alt={title}
             loading="lazy"
             onError={() => setImageError(true)}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+            className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-800/50">
-            <Tag className="w-6 h-6 mb-1 text-slate-300 dark:text-slate-600" />
-            <span className="text-[11px] font-medium text-slate-400 dark:text-slate-500">No Image</span>
+          <div className="w-full h-full flex flex-col items-center justify-center text-[#71717A] dark:text-[#A1A1AA] bg-[#FAFAFA] dark:bg-[#18181B]">
+            <Tag className="w-6 h-6 mb-1 text-[#71717A]/60 dark:text-[#A1A1AA]/60" />
+            <span className="text-[11px] font-medium text-[#71717A] dark:text-[#A1A1AA]">No Image</span>
           </div>
         )}
 
@@ -84,14 +87,14 @@ export default function ListingCard({
             e.stopPropagation();
             onSave(id);
           }}
-          className={`absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-white/90 dark:bg-slate-900/90 backdrop-blur-xs transition-colors shadow-2xs z-10 ${
+          className={`absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-white/90 dark:bg-[#18181B]/90 backdrop-blur-xs transition-colors shadow-2xs z-10 ${
             isSaved
-              ? 'text-rose-600 hover:bg-white dark:hover:bg-slate-800'
-              : 'text-slate-500 hover:text-rose-600 hover:bg-white dark:hover:bg-slate-800'
+              ? 'text-[#DC2626] dark:text-[#F87171] hover:bg-white dark:hover:bg-[#27272A]'
+              : 'text-[#71717A] dark:text-[#A1A1AA] hover:text-[#DC2626] dark:hover:text-[#F87171] hover:bg-white dark:hover:bg-[#27272A]'
           }`}
           aria-label={isSaved ? 'Remove from saved' : 'Save listing'}
         >
-          <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
+          <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-[#DC2626] text-[#DC2626] dark:fill-[#F87171] dark:text-[#F87171]' : ''}`} />
         </button>
       )}
 
@@ -99,54 +102,54 @@ export default function ListingCard({
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
         <div className="space-y-1">
           {categoryName && (
-            <div className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 tracking-wide uppercase">
+            <div className="text-[11px] font-semibold text-[#6366F1] dark:text-[#818CF8] tracking-wide uppercase">
               {categoryName}
             </div>
           )}
 
-          <h3 className="font-semibold text-slate-900 dark:text-slate-100 text-sm line-clamp-2 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors leading-snug">
+          <h3 className="font-semibold text-[#18181B] dark:text-[#FAFAFA] text-sm line-clamp-2 group-hover:text-[#4F46E5] dark:group-hover:text-[#818CF8] transition-colors leading-snug">
             <Link
-              to={`/listings/${id}`}
+              to={`/listings/${listingId}`}
               className="focus:outline-none focus-visible:underline"
             >
               {title}
             </Link>
           </h3>
 
-          <div className="pt-0.5 text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+          <div className="pt-0.5 text-base sm:text-lg font-bold text-[#18181B] dark:text-[#FAFAFA] tracking-tight">
             {formatPrice(price)}
           </div>
         </div>
 
         {/* Metadata Footer */}
-        <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
+        <div className="pt-2.5 border-t border-[#E4E4E7] dark:border-[#27272A] space-y-1.5 text-xs text-[#71717A] dark:text-[#A1A1AA]">
           <div className="flex items-center justify-between gap-2">
             {location && (
               <span className="flex items-center gap-1 truncate text-[11px]" title={location}>
-                <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                <MapPin className="w-3 h-3 text-[#71717A] dark:text-[#A1A1AA] shrink-0" />
                 <span className="truncate">{location}</span>
               </span>
             )}
 
             {postedAt && (
-              <span className="flex items-center gap-1 shrink-0 text-[11px] text-slate-400">
-                <Clock className="w-3 h-3 text-slate-400" />
+              <span className="flex items-center gap-1 shrink-0 text-[11px] text-[#71717A] dark:text-[#A1A1AA]">
+                <Clock className="w-3 h-3 text-[#71717A] dark:text-[#A1A1AA]" />
                 <span>{postedAt}</span>
               </span>
             )}
           </div>
 
           {seller && (
-            <div className="flex items-center justify-between pt-1 border-t border-slate-50 dark:border-slate-800/60 text-[11px]">
-              <span className="text-slate-600 dark:text-slate-400 truncate">
+            <div className="flex items-center justify-between pt-1 border-t border-[#E4E4E7]/60 dark:border-[#27272A]/60 text-[11px]">
+              <span className="text-[#71717A] dark:text-[#A1A1AA] truncate">
                 {seller.name}
               </span>
               {seller.verified && (
                 <span
-                  className="inline-flex items-center gap-1 font-medium text-emerald-700 dark:text-emerald-400"
+                  className="inline-flex items-center gap-1 font-medium text-[#16A34A] dark:text-[#22C55E]"
                   title="Verified Student Account"
                 >
-                  <ShieldCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <ShieldCheck className="w-3 h-3 text-[#16A34A] dark:text-[#22C55E]" />
                   <span>Verified</span>
                 </span>
               )}

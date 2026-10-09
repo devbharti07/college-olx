@@ -12,4 +12,4 @@ export { default as EmptyState } from './EmptyState';
 export { default as ErrorState } from './ErrorState';
 export { default as Price } from './Price';
 export { default as PageHeader } from '../layouts/PageHeader';
-
+export { default as EmailVerificationPrompt } from './EmailVerificationPrompt';

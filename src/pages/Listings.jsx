@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   PlusCircle, 
@@ -18,20 +18,23 @@ import {
   Button, 
   Badge, 
   EmptyState, 
+  LoadingState,
+  ErrorState,
 } from '../components';
 
 export default function Listings() {
   useDocumentTitle('Campus Listings | Marketplace');
   const [searchParams, setSearchParams] = useSearchParams();
-  const { filterListings } = useListings();
+  const { listings, pagination, loading, error, fetchListings } = useListings();
 
   // URL Query Parameters initialization
   const initialCategory = searchParams.get('category') || 'all';
-  const initialSearch = searchParams.get('search') || '';
+  const initialSearch = searchParams.get('q') || searchParams.get('search') || '';
   const initialCondition = searchParams.get('condition') || 'all';
   const initialMinPrice = searchParams.get('minPrice') || '';
   const initialMaxPrice = searchParams.get('maxPrice') || '';
   const initialSort = searchParams.get('sort') || 'newest';
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState(initialSearch);
@@ -40,17 +43,19 @@ export default function Listings() {
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   const [sortBy, setSortBy] = useState(initialSort);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   // Mobile Filter Drawer State
   const [mobileFiltersOpen, setMobileMenuFiltersOpen] = useState(false);
 
   // Sync state if URL search parameters change externally
   const currentCategoryParam = searchParams.get('category') || 'all';
-  const currentSearchParam = searchParams.get('search') || '';
+  const currentSearchParam = searchParams.get('q') || searchParams.get('search') || '';
   const currentConditionParam = searchParams.get('condition') || 'all';
   const currentMinPriceParam = searchParams.get('minPrice') || '';
   const currentMaxPriceParam = searchParams.get('maxPrice') || '';
   const currentSortParam = searchParams.get('sort') || 'newest';
+  const currentPageParam = parseInt(searchParams.get('page') || '1', 10);
 
   const [prevParams, setPrevParams] = useState(() => searchParams.toString());
   const currentParamsStr = searchParams.toString();
@@ -62,48 +67,102 @@ export default function Listings() {
     setMinPrice(currentMinPriceParam);
     setMaxPrice(currentMaxPriceParam);
     setSortBy(currentSortParam);
+    setCurrentPage(currentPageParam);
   }
 
   // Update URL search parameters
-  const updateUrlParams = (updates = {}) => {
-    const nextParams = new URLSearchParams(searchParams);
+  const updateUrlParams = useCallback(
+    (updates = {}) => {
+      const nextParams = new URLSearchParams(searchParams);
 
-    const merged = {
-      search: searchQuery,
-      category: selectedCategory,
-      condition: selectedCondition,
-      minPrice,
-      maxPrice,
-      sort: sortBy,
-      ...updates,
-    };
+      const merged = {
+        search: searchQuery,
+        category: selectedCategory,
+        condition: selectedCondition,
+        minPrice,
+        maxPrice,
+        sort: sortBy,
+        page: currentPage,
+        ...updates,
+      };
 
-    Object.entries(merged).forEach(([key, val]) => {
-      if (!val || val === 'all' || (key === 'sort' && val === 'newest')) {
-        nextParams.delete(key);
-      } else {
-        nextParams.set(key, val);
+      // If changing filters, reset to page 1 unless page is explicitly specified
+      if (
+        !('page' in updates) &&
+        ('search' in updates ||
+          'category' in updates ||
+          'condition' in updates ||
+          'minPrice' in updates ||
+          'maxPrice' in updates ||
+          'sort' in updates)
+      ) {
+        merged.page = 1;
       }
-    });
 
-    setSearchParams(nextParams);
-  };
+      Object.entries(merged).forEach(([key, val]) => {
+        if (
+          !val ||
+          val === 'all' ||
+          (key === 'sort' && val === 'newest') ||
+          (key === 'page' && Number(val) === 1)
+        ) {
+          nextParams.delete(key);
+        } else {
+          nextParams.set(key, val);
+        }
+      });
 
-  // Derive listings directly from shared listing context
-  const listings = useMemo(() => {
-    return filterListings({
-      category: selectedCategory,
-      search: searchQuery,
-      condition: selectedCondition,
+      setSearchParams(nextParams);
+    },
+    [
+      searchParams,
+      searchQuery,
+      selectedCategory,
+      selectedCondition,
       minPrice,
       maxPrice,
-      sort: sortBy,
+      sortBy,
+      currentPage,
+      setSearchParams,
+    ]
+  );
+
+  // Fetch real listings from backend API whenever query parameters change
+  useEffect(() => {
+    fetchListings({
+      search: currentSearchParam,
+      category: currentCategoryParam,
+      condition: currentConditionParam,
+      minPrice: currentMinPriceParam,
+      maxPrice: currentMaxPriceParam,
+      sort: currentSortParam,
+      page: currentPageParam,
+      limit: 20,
     });
-  }, [filterListings, selectedCategory, searchQuery, selectedCondition, minPrice, maxPrice, sortBy]);
+  }, [
+    fetchListings,
+    currentSearchParam,
+    currentCategoryParam,
+    currentConditionParam,
+    currentMinPriceParam,
+    currentMaxPriceParam,
+    currentSortParam,
+    currentPageParam,
+  ]);
+
+  // Debounce search query input to avoid hammering API while typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery !== currentSearchParam) {
+        updateUrlParams({ search: searchQuery, page: 1 });
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchQuery, currentSearchParam, updateUrlParams]);
 
   const handleSearchSubmit = (val) => {
     setSearchQuery(val);
-    updateUrlParams({ search: val });
+    updateUrlParams({ search: val, page: 1 });
   };
 
   const handleResetFilters = () => {
@@ -113,6 +172,7 @@ export default function Listings() {
     setMinPrice('');
     setMaxPrice('');
     setSortBy('newest');
+    setCurrentPage(1);
     setSearchParams({});
   };
 
@@ -141,7 +201,7 @@ export default function Listings() {
     <div className="space-y-6">
       {/* 1. Category Filter */}
       <div className="space-y-2.5">
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+        <label className="text-xs font-bold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA] block">
           Category
         </label>
         <div className="space-y-1">
@@ -151,14 +211,14 @@ export default function Listings() {
               setSelectedCategory('all');
               updateUrlParams({ category: 'all' });
             }}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
               selectedCategory === 'all'
-                ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-[#EEF2FF] dark:bg-[#312E81]/30 text-[#4F46E5] dark:text-[#A5B4FC] font-bold'
+                : 'text-[#71717A] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
             }`}
           >
             <span>All Categories</span>
-            {selectedCategory === 'all' && <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+            {selectedCategory === 'all' && <Check className="w-3.5 h-3.5 text-[#6366F1] dark:text-[#818CF8]" />}
           </button>
 
           {CATEGORIES.map((cat) => {
@@ -171,14 +231,14 @@ export default function Listings() {
                   setSelectedCategory(cat.id);
                   updateUrlParams({ category: cat.id });
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-[#EEF2FF] dark:bg-[#312E81]/30 text-[#4F46E5] dark:text-[#A5B4FC] font-bold'
+                    : 'text-[#71717A] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
                 }`}
               >
                 <span>{cat.name}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#6366F1] dark:text-[#818CF8]" />}
               </button>
             );
           })}
@@ -186,8 +246,8 @@ export default function Listings() {
       </div>
 
       {/* 2. Condition Filter */}
-      <div className="space-y-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+      <div className="space-y-2.5 pt-4 border-t border-[#E4E4E7] dark:border-[#27272A]">
+        <label className="text-xs font-bold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA] block">
           Condition
         </label>
         <div className="space-y-1">
@@ -201,14 +261,14 @@ export default function Listings() {
                   setSelectedCondition(cond.id);
                   updateUrlParams({ condition: cond.id });
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-[#EEF2FF] dark:bg-[#312E81]/30 text-[#4F46E5] dark:text-[#A5B4FC] font-bold'
+                    : 'text-[#71717A] dark:text-[#A1A1AA] hover:bg-[#F4F4F5] dark:hover:bg-[#27272A]'
                 }`}
               >
                 <span>{cond.label}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                {isSelected && <Check className="w-3.5 h-3.5 text-[#6366F1] dark:text-[#818CF8]" />}
               </button>
             );
           })}
@@ -216,13 +276,13 @@ export default function Listings() {
       </div>
 
       {/* 3. Price Range (₹) */}
-      <div className="space-y-2.5 pt-4 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">
+      <div className="space-y-2.5 pt-4 border-t border-[#E4E4E7] dark:border-[#27272A]">
+        <label className="text-xs font-bold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA] block">
           Price Range (₹)
         </label>
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium block mb-1">Min (₹)</span>
+            <span className="text-[10px] text-[#71717A] dark:text-[#A1A1AA] font-medium block mb-1">Min (₹)</span>
             <input
               type="number"
               min="0"
@@ -232,11 +292,11 @@ export default function Listings() {
                 setMinPrice(e.target.value);
                 updateUrlParams({ minPrice: e.target.value });
               }}
-              className="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-600"
+              className="w-full text-xs p-2 rounded-lg bg-[#FAFAFA] dark:bg-[#27272A] border border-[#E4E4E7] dark:border-[#27272A] text-[#18181B] dark:text-[#FAFAFA] focus:outline-none focus:border-[#6366F1] dark:focus:border-[#818CF8]"
             />
           </div>
           <div>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium block mb-1">Max (₹)</span>
+            <span className="text-[10px] text-[#71717A] dark:text-[#A1A1AA] font-medium block mb-1">Max (₹)</span>
             <input
               type="number"
               min="0"
@@ -246,7 +306,7 @@ export default function Listings() {
                 setMaxPrice(e.target.value);
                 updateUrlParams({ maxPrice: e.target.value });
               }}
-              className="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-600"
+              className="w-full text-xs p-2 rounded-lg bg-[#FAFAFA] dark:bg-[#27272A] border border-[#E4E4E7] dark:border-[#27272A] text-[#18181B] dark:text-[#FAFAFA] focus:outline-none focus:border-[#6366F1] dark:focus:border-[#818CF8]"
             />
           </div>
         </div>
@@ -266,7 +326,7 @@ export default function Listings() {
                 setMaxPrice(range.max);
                 updateUrlParams({ minPrice: range.min, maxPrice: range.max });
               }}
-              className="px-2 py-1 rounded-md text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium transition-colors"
+              className="px-2 py-1 rounded-md text-[11px] bg-[#F4F4F5] dark:bg-[#27272A] hover:bg-[#E4E4E7] dark:hover:bg-[#3F3F46] text-[#18181B] dark:text-[#FAFAFA] font-medium transition-colors cursor-pointer"
             >
               {range.label}
             </button>
@@ -276,14 +336,14 @@ export default function Listings() {
 
       {/* Reset Action */}
       {activeFiltersCount > 0 && (
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-4 border-t border-[#E4E4E7] dark:border-[#27272A]">
           <Button
             variant="ghost"
             size="sm"
             fullWidth
             onClick={handleResetFilters}
             leftIcon={RefreshCcw}
-            className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+            className="text-[#71717A] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-[#FAFAFA]"
           >
             Clear All Filters
           </Button>
@@ -311,7 +371,7 @@ export default function Listings() {
       />
 
       {/* Interactive Controls Bar: Search, Mobile Filter Toggle, and Sort Dropdown */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
+      <div className="bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] rounded-xl p-4 shadow-2xs space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           {/* Main search bar */}
           <div className="flex-1 max-w-xl">
@@ -339,7 +399,7 @@ export default function Listings() {
 
             {/* Sort by dropdown */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium hidden sm:inline">Sort:</span>
+              <span className="text-xs text-[#71717A] dark:text-[#A1A1AA] font-medium hidden sm:inline">Sort:</span>
               <select
                 id="listings-sort-select"
                 aria-label="Sort listings"
@@ -348,9 +408,10 @@ export default function Listings() {
                   setSortBy(e.target.value);
                   updateUrlParams({ sort: e.target.value });
                 }}
-                className="py-2 px-3 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:border-emerald-600 focus:outline-none font-medium text-slate-700 dark:text-slate-200 cursor-pointer"
+                className="py-2 px-3 text-xs bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] rounded-lg focus:border-[#6366F1] dark:focus:border-[#818CF8] focus:outline-none font-medium text-[#18181B] dark:text-[#FAFAFA] cursor-pointer"
               >
                 <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
               </select>
@@ -360,8 +421,8 @@ export default function Listings() {
 
         {/* Active Filter Chips */}
         {activeFiltersCount > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-            <span className="text-slate-400 dark:text-slate-500 font-medium mr-1">Active:</span>
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-[#E4E4E7] dark:border-[#27272A] text-xs">
+            <span className="text-[#71717A] dark:text-[#A1A1AA] font-medium mr-1">Active:</span>
 
             {selectedCategory !== 'all' && (
               <Badge
@@ -441,7 +502,7 @@ export default function Listings() {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:underline ml-2"
+              className="text-xs font-semibold text-[#6366F1] dark:text-[#818CF8] hover:underline ml-2"
             >
               Reset all
             </button>
@@ -452,10 +513,10 @@ export default function Listings() {
       {/* Main Layout: Desktop Sidebar Filters + Listings Grid */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         {/* Desktop Sidebar Filters */}
-        <aside className="hidden md:block md:col-span-3 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-5 shadow-2xs sticky top-20">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 mb-4">
-            <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-1.5">
-              <Filter className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+        <aside className="hidden md:block md:col-span-3 bg-white dark:bg-[#18181B] border border-[#E4E4E7] dark:border-[#27272A] rounded-xl p-5 shadow-2xs sticky top-20">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E4E4E7] dark:border-[#27272A] mb-4">
+            <h3 className="font-bold text-[#18181B] dark:text-[#FAFAFA] text-sm flex items-center gap-1.5">
+              <Filter className="w-4 h-4 text-[#6366F1] dark:text-[#818CF8]" />
               <span>Filter Items</span>
             </h3>
             {activeFiltersCount > 0 && (
@@ -469,15 +530,61 @@ export default function Listings() {
 
         {/* Listings Grid Area */}
         <main className="md:col-span-9">
-          {listings.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {listings.map((listing) => (
-                <ListingCard
-                  key={listing.id}
-                  listing={listing}
-                />
-              ))}
-            </div>
+          {loading ? (
+            <LoadingState
+              type="skeleton-grid"
+              count={6}
+              message="Fetching live campus listings..."
+            />
+          ) : error ? (
+            <ErrorState
+              title="Unable to Load Marketplace Listings"
+              message={error}
+              onRetry={() => fetchListings()}
+              retryText="Retry Connection"
+              actionText="Post an Item"
+              actionTo="/sell"
+            />
+          ) : listings.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {listings.map((listing, idx) => (
+                  <ListingCard
+                    key={listing.id || listing._id}
+                    listing={listing}
+                    className={`animate-fade-in-up stagger-${(idx % 8) + 1}`}
+                  />
+                ))}
+              </div>
+
+              {pagination && pagination.totalPages > 1 && (
+                <div className="flex items-center justify-between border-t border-[#E4E4E7] dark:border-[#27272A] pt-6 mt-6">
+                  <div className="text-xs text-[#71717A] dark:text-[#A1A1AA] font-medium">
+                    Showing page <span className="font-bold text-[#18181B] dark:text-[#FAFAFA]">{pagination.page}</span> of{' '}
+                    <span className="font-bold text-[#18181B] dark:text-[#FAFAFA]">{pagination.totalPages}</span>{' '}
+                    ({pagination.total} {pagination.total === 1 ? 'item' : 'items'})
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!pagination.hasPrev && !pagination.hasPreviousPage}
+                      onClick={() => updateUrlParams({ page: (pagination.page || 1) - 1 })}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={!pagination.hasNext && !pagination.hasNextPage}
+                      onClick={() => updateUrlParams({ page: (pagination.page || 1) + 1 })}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           ) : activeFiltersCount > 0 ? (
             <EmptyState
               title="No listings available yet"
@@ -504,23 +611,23 @@ export default function Listings() {
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 overflow-hidden md:hidden">
           <div
-            className="fixed inset-0 bg-slate-900/40 transition-opacity"
+            className="fixed inset-0 bg-black/50 backdrop-blur-2xs transition-opacity animate-fade-in"
             onClick={() => setMobileMenuFiltersOpen(false)}
             aria-hidden="true"
           />
 
           <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-xs bg-white dark:bg-slate-900 shadow-xl flex flex-col justify-between">
+            <div className="w-screen max-w-xs bg-white dark:bg-[#18181B] shadow-xl flex flex-col justify-between animate-fade-in">
               {/* Drawer Header */}
-              <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="p-4 border-b border-[#E4E4E7] dark:border-[#27272A] flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-                  <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm">Filters & Refinements</h3>
+                  <SlidersHorizontal className="w-4 h-4 text-[#6366F1] dark:text-[#818CF8]" />
+                  <h3 className="font-bold text-[#18181B] dark:text-[#FAFAFA] text-sm">Filters & Refinements</h3>
                 </div>
                 <button
                   type="button"
                   onClick={() => setMobileMenuFiltersOpen(false)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                  className="p-1 rounded-lg text-[#71717A] hover:text-[#18181B] dark:hover:text-[#FAFAFA]"
                   aria-label="Close filters"
                 >
                   <X className="w-5 h-5" />
@@ -533,7 +640,7 @@ export default function Listings() {
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex items-center gap-2">
+              <div className="p-4 border-t border-[#E4E4E7] dark:border-[#27272A] bg-[#FAFAFA] dark:bg-[#09090B] flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="md"

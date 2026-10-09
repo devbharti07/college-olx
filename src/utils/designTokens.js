@@ -6,31 +6,33 @@
 
 export const DESIGN_TOKENS = {
   colors: {
-    brand: {
-      50: '#f0fdf4',
-      100: '#dcfce7',
-      200: '#bbf7d0',
-      500: '#10b981',
-      600: '#059669', // Main Brand Emerald
-      700: '#047857',
-      800: '#065f46',
-      900: '#064e3b',
+    accent: {
+      light: '#6366F1',
+      lightHover: '#4F46E5',
+      dark: '#818CF8',
+      darkHover: '#A5B4FC',
     },
-    neutral: {
-      50: '#f8fafc',  // Background
-      100: '#f1f5f9', // Light surface
-      200: '#e2e8f0', // Border subtle
-      300: '#cbd5e1', // Border strong
-      400: '#94a3b8', // Subtle text / icon
-      500: '#64748b', // Muted text
-      700: '#334155', // Secondary text
-      900: '#0f172a', // Primary heading text
+    background: {
+      light: '#FAFAFA',
+      dark: '#09090B',
+    },
+    surface: {
+      light: '#FFFFFF',
+      dark: '#18181B',
+    },
+    border: {
+      light: '#E4E4E7',
+      dark: '#27272A',
+    },
+    text: {
+      primaryLight: '#18181B',
+      primaryDark: '#FAFAFA',
+      secondaryLight: '#71717A',
+      secondaryDark: '#A1A1AA',
     },
     semantic: {
-      success: { bg: '#f0fdf4', text: '#166534', border: '#bbf7d0' },
-      warning: { bg: '#fffbeb', text: '#92400e', border: '#fde68a' },
-      danger:  { bg: '#fef2f2', text: '#991b1b', border: '#fecaca' },
-      info:    { bg: '#eff6ff', text: '#1e40af', border: '#bfdbfe' },
+      success: { light: '#16A34A', dark: '#22C55E' },
+      error: { light: '#DC2626', dark: '#F87171' },
     },
   },
   typography: {
